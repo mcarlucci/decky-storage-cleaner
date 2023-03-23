@@ -6,9 +6,6 @@ import {
   ServerAPI,
   staticClasses,
   DialogCheckbox,
-  showContextMenu,
-  Menu,
-  MenuItem,
   showModal,
   ConfirmModal
 } from "decky-frontend-lib";
@@ -91,12 +88,12 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
 
   return (
     <React.Fragment>
-      <PanelSection title="Shader Cache" spinner={gamesWithShaderCache?.length === 0}>
+      <PanelSection title="Shader Cache" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
         <PanelSectionRow>
           Total Size: { totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : 'Calculating...' }
         </PanelSectionRow>
         {gamesWithShaderCache?.length > 0 && gamesWithShaderCache.map(({ appid, name }) => (
-            <DialogCheckbox key={appid} label={name} highlightColor="blue" onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
+            <DialogCheckbox key={appid} label={name} color="blue" highlightColor="blue" onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
         ))}
         {gamesWithCompatData?.length > 0 && (
           <React.Fragment>
@@ -126,7 +123,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading}
+                disabled={isLoading || totalShaderCacheSize === "0B"}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
@@ -147,7 +144,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
           </React.Fragment>
         )}
       </PanelSection>
-      <PanelSection title="Compatibility Data" spinner={gamesWithCompatData?.length === 0}>
+      <PanelSection title="Compatibility Data" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
         <PanelSectionRow>
           Total Size: { totalCompatDataSize?.length > 0 ? totalCompatDataSize : 'Calculating...'}
         </PanelSectionRow>
@@ -182,7 +179,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading}
+                disabled={isLoading || totalCompatDataSize === "0B"}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
