@@ -1,30 +1,35 @@
 {
   "name": "decky-storage-cleaner",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A plugin for tidying up your Deck's storage",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
-    "build:dev": "pnpm run build && curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SteamDeckHomebrew/decky-plugin-template.git"
+    "url": "git+https://github.com/mcarlucci/decky-storage-cleaner.git"
   },
   "keywords": [
     "decky",
     "plugin",
-    "plugin-template",
     "steam-deck",
-    "deck"
+    "deck",
+    "storage",
+    "utility",
+    "cleaner",
+    "memory",
+    "shader",
+    "cache",
+    "disk"
   ],
   "author": "Matt Carlucci <matt@uxdev.io>",
   "license": "GNU",
   "bugs": {
-    "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
+    "url": "https://github.com/mcarlucci/decky-storage-cleaner/issues"
   },
-  "homepage": "https://github.com/SteamDeckHomebrew/decky-plugin-template#readme",
+  "homepage": "https://github.com/mcarlucci/decky-storage-cleaner#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-json": "^4.1.0",

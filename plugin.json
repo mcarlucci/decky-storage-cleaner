@@ -4,7 +4,7 @@
   "flags": ["debug", "_root"],
   "publish": {
     "tags": ["storage", "memory", "shader", "cache", "disk", "utility"],
-    "description": "Get rid of that 'Other' (yellow line) storage taking up all of your Deck's storage space",
+    "description": "Tidy up your Deck's storage space",
     "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
   }
 }
