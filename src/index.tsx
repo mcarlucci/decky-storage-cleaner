@@ -144,7 +144,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
           </React.Fragment>
         )}
       </PanelSection>
-      <PanelSection title="Compatibility Data" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
+      <PanelSection title="Compatibility Data" spinner={gamesWithCompatData?.length === 0 && totalCompatDataSize !== "0B"}>
         <PanelSectionRow>
           Total Size: { totalCompatDataSize?.length > 0 ? totalCompatDataSize : 'Calculating...'}
         </PanelSectionRow>
