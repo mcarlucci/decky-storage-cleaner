@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import shutil
 import os
-import urllib
+import urllib.request
 import json
 import math
+import decky_plugin
+
+homeDir = os.environ['DECKY_PLUGIN_DIR']
 
 class Plugin:
     async def _listdirs(self, rootdir):
@@ -34,8 +37,12 @@ class Plugin:
         return await self._convert_size(self, total_size)
 
     async def list_games_with_temp_data(self, dirName):
-        # store the JSON response of from GetAppList url
-        response = urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
+        # try to fetch GetAppList url, otherwise fallback to static data (poor man's offline mode)
+        try:
+            response = urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
+        except:
+            response = open(homeDir + '/assets/GetAppListV0002.json')
+        
         all_games = json.loads(response.read())['applist']['apps']
 
         # list games on steam deck
