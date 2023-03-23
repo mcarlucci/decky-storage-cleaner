@@ -1,9 +1,10 @@
 {
-  "name": "decky-plugin-template",
+  "name": "decky-storage-cleaner",
   "version": "0.0.1",
-  "description": "A template to quickly create decky plugins from scratch, based on TypeScript and webpack",
+  "description": "A plugin for tidying up your Deck's storage",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
+    "build:dev": "pnpm run build && curl -L https://github.com/SteamDeckHomebrew/decky-loader/raw/main/dist/install_prerelease.sh | sh",
     "watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,8 +19,8 @@
     "steam-deck",
     "deck"
   ],
-  "author": "Jonas Dellinger <jonas@dellinger.dev>",
-  "license": "BSD-3-Clause",
+  "author": "Matt Carlucci <matt@uxdev.io>",
+  "license": "GNU",
   "bugs": {
     "url": "https://github.com/SteamDeckHomebrew/decky-plugin-template/issues"
   },

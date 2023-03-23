@@ -7,7 +7,7 @@
     "jsxFactory": "window.SP_REACT.createElement",
     "declaration": false,
     "moduleResolution": "node",
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "noImplicitReturns": true,

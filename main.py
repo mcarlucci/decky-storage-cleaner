@@ -1,41 +1,61 @@
+#!/usr/bin/env python3
+import shutil
 import os
-
-# The decky plugin module is located at decky-loader/plugin
-# For easy intellisense checkout the decky-loader code one directory up
-# or add the `decky-loader/plugin` path to `python.analysis.extraPaths` in `.vscode/settings.json`
-import decky_plugin
-
+import urllib
+import json
+import math
 
 class Plugin:
-    # A normal method. It can be called from JavaScript using call_plugin_function("method_1", argument1, argument2)
-    async def add(self, left, right):
-        return left + right
+    async def _listdirs(self, rootdir):
+        subdirectories = []
+        for item in os.listdir(rootdir):
+            subdirectories.append(item)
+        
+        return subdirectories
 
-    # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
-    async def _main(self):
-        decky_plugin.logger.info("Hello World!")
+    async def list_games_with_temp_data(self, dirName):
+        # store the JSON response of from GetAppList url
+        response = urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
+        all_games = json.loads(response.read())['applist']['apps']
 
-    # Function called first during the unload process, utilize this to handle your plugin being removed
-    async def _unload(self):
-        decky_plugin.logger.info("Goodbye World!")
-        pass
+        # list games on steam deck
+        local_game_ids = await self._listdirs(self, '/home/deck/.steam/steam/steamapps/' + dirName)
 
-    # Migrations that should be performed before entering `_main()`.
-    async def _migration(self):
-        decky_plugin.logger.info("Migrating")
-        # Here's a migration example for logs:
-        # - `~/.config/decky-template/template.log` will be migrated to `decky_plugin.DECKY_PLUGIN_LOG_DIR/template.log`
-        decky_plugin.migrate_logs(os.path.join(decky_plugin.DECKY_USER_HOME,
-                                               ".config", "decky-template", "template.log"))
-        # Here's a migration example for settings:
-        # - `~/homebrew/settings/template.json` is migrated to `decky_plugin.DECKY_PLUGIN_SETTINGS_DIR/template.json`
-        # - `~/.config/decky-template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_SETTINGS_DIR/`
-        decky_plugin.migrate_settings(
-            os.path.join(decky_plugin.DECKY_HOME, "settings", "template.json"),
-            os.path.join(decky_plugin.DECKY_USER_HOME, ".config", "decky-template"))
-        # Here's a migration example for runtime data:
-        # - `~/homebrew/template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_RUNTIME_DIR/`
-        # - `~/.local/share/decky-template/` all files and directories under this root are migrated to `decky_plugin.DECKY_PLUGIN_RUNTIME_DIR/`
-        decky_plugin.migrate_runtime(
-            os.path.join(decky_plugin.DECKY_HOME, "template"),
-            os.path.join(decky_plugin.DECKY_USER_HOME, ".local", "share", "decky-template"))
+        games_found = list(filter(lambda d: str(d['appid']) in local_game_ids, all_games))
+
+        all_clean = {
+            "appid": -1, 
+            "name": "All Clean!" 
+        }
+
+        return json.dumps(games_found if len(games_found) > 0 else all_clean)
+
+    async def delete_cache(self, dirName):
+        shutil.rmtree('/home/deck/.steam/steam/steamapps/' + dirName)
+
+    async def _convert_size(self, size_bytes):
+        if size_bytes == 0:
+            return "0B"
+        size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+        i = int(math.floor(math.log(size_bytes, 1024)))
+        p = math.pow(1024, i)
+        s = round(size_bytes / p, 2)
+        return "%s %s" % (s, size_name[i])
+
+    async def get_size(self, dirName):
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk('/home/deck/.steam/steam/steamapps/' + dirName):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                # skip if it is symbolic link
+                if not os.path.islink(fp):
+                    total_size += os.path.getsize(fp)
+
+        return await self._convert_size(self, total_size)
+    
+    # async def _has_internet(host='http://google.com'):
+    #     try:
+    #         urllib.request.urlopen(host)
+    #         return True
+    #     except:
+    #         return False
