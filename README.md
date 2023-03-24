@@ -8,6 +8,10 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 - Selectively clear the shader cache and compatibility data you don't want
 - Clear all the shader cache or compatibility data all at once
 
+![](assets/Screenshot-1.png)
+
+![](assets/Screenshot-2.png)
+
 ## Installation
 
 ### Decky Loader Store
@@ -23,12 +27,6 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 2. Under the Decky tab, scroll down to the 'Other' section.
 3. Copy and past the following url: https://github.com/mcarlucci/decky-storage-cleaner/releases/tag/v1.0.0
 4. Press the Install button
-
-## Screenshots
-
-![](assets/Screenshot-1.png)
-
-![](assets/Screenshot-2.png)
 
 ## Possible Future Features
 
