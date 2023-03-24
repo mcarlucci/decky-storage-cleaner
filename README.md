@@ -32,6 +32,7 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ## Possible Future Features
 
+- Support microsd storage...?
 - Clear depotcache...?
 - Small disk analyser/visualizer...?
 - Auto/scheduled cache cleanups...?
