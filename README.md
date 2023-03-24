@@ -12,7 +12,7 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ## Installation
 
-1. Install [Decky Loader](https://deckbrew.xyz/en/user-guide/install)
+1. Install [Decky Loader](https://deckbrew.xyz/)
 2. Open the Quick Access menu
 3. Open the Plugins Browser
 4. Find Storage Cleaner and press "Install"
