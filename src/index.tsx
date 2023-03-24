@@ -18,7 +18,6 @@ interface Game {
 }
 
 const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [gamesWithShaderCache, setGamesWithShaderCache] = useState<Game[]>([]);
   const [gamesWithCompatData, setGamesWithCompatData] = useState<Game[]>([]);
   const [totalShaderCacheSize, setTotalShaderCacheSize] = useState<string>("");
@@ -47,13 +46,11 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   }
   
   async function clearDataCache(cacheDirName: string, appidArr?: string[]) {
-    setIsLoading(true);
     if (appidArr && appidArr.length > 0) {
       await appidArr.forEach(async appid => await serverAPI.callPluginMethod("delete_cache", { dirName: `${cacheDirName}/${appid}` }));
     } else {
       await serverAPI.callPluginMethod("delete_cache", { dirName: cacheDirName })
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -93,7 +90,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
           Total Size: { totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : 'Calculating...' }
         </PanelSectionRow>
         {gamesWithShaderCache?.length > 0 && gamesWithShaderCache.map(({ appid, name }) => (
-            <DialogCheckbox key={appid} label={name} color="blue" highlightColor="blue" onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
+            <DialogCheckbox key={appid} label={name} onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
         ))}
         {gamesWithCompatData?.length > 0 && (
           <React.Fragment>
@@ -101,11 +98,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading || selectedGamesWithShaderCache.length === 0}
+                disabled={selectedGamesWithShaderCache.length === 0}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
-                      bOKDisabled={isLoading}
                       onCancel={() => {}} 
                       onOK={async () => await clearDataCache("shadercache", selectedGamesWithShaderCache)}
                       strTitle={"Clear Shader Cache"}
@@ -123,11 +119,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading || totalShaderCacheSize === "0B"}
+                disabled={totalShaderCacheSize === "0B"}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
-                      bOKDisabled={isLoading}
                       onCancel={() => {}} 
                       onOK={async () => await clearDataCache("shadercache")}
                       strTitle={"Clear Shader Cache"}
@@ -157,11 +152,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading || selectedGamesWithCompatData.length === 0}
+                disabled={selectedGamesWithCompatData.length === 0}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
-                      bOKDisabled={isLoading}
                       onCancel={() => {}} 
                       onOK={async () => await clearDataCache("compatdata", selectedGamesWithCompatData)}
                       strTitle={"Clear Compatibility Data"}
@@ -179,11 +173,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               <ButtonItem
                 layout="below"
                 bottomSeparator="none"
-                disabled={isLoading || totalCompatDataSize === "0B"}
+                disabled={totalCompatDataSize === "0B"}
                 onClick={() => 
                   showModal(
                     <ConfirmModal
-                      bOKDisabled={isLoading}
                       onCancel={() => {}} 
                       onOK={async () => await clearDataCache("compatdata")}
                       strTitle={"Clear Compatibility Data"}
@@ -200,7 +193,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
           </React.Fragment>
         )}
       </PanelSection>
-   </React.Fragment>
+    </React.Fragment>
   );
 };
 
