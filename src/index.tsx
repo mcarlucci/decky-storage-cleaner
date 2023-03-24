@@ -86,112 +86,117 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   return (
     <React.Fragment>
       <PanelSection title="Shader Cache" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
-        <PanelSectionRow>
+        <PanelSectionRow style={{ fontSize: "11px", marginBottom: "10px" }}>
+          Shader cache is a precompiled collection of shader programs that helps reduce lag in graphics-intensive applications. It's ok to delete because it will be recreated the next time you run the application.
+        </PanelSectionRow>
+        <PanelSectionRow style={{ marginBottom: "10px" }}>
           Total Size: { totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : 'Calculating...' }
         </PanelSectionRow>
         {gamesWithShaderCache?.length > 0 && gamesWithShaderCache.map(({ appid, name }) => (
             <DialogCheckbox key={appid} label={name} onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
         ))}
-        {gamesWithCompatData?.length > 0 && (
-          <React.Fragment>
-            <PanelSectionRow>
-              <ButtonItem
-                layout="below"
-                bottomSeparator="none"
-                disabled={selectedGamesWithShaderCache.length === 0}
-                onClick={() => 
-                  showModal(
-                    <ConfirmModal
-                      onCancel={() => {}} 
-                      onOK={async () => await clearDataCache("shadercache", selectedGamesWithShaderCache)}
-                      strTitle={"Clear Shader Cache"}
-                      strOKButtonText={"Clear"}
-                    >
-                      Are you sure you want to clear the shader cache for <strong>{Array.from(gamesWithShaderCache.filter(({ appid }) => selectedGamesWithShaderCache.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
-                    </ConfirmModal>,
-                  )
-                }
-              >
-                Clear Selected Shader Cache
-              </ButtonItem>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <ButtonItem
-                layout="below"
-                bottomSeparator="none"
-                disabled={totalShaderCacheSize === "0B"}
-                onClick={() => 
-                  showModal(
-                    <ConfirmModal
-                      onCancel={() => {}} 
-                      onOK={async () => await clearDataCache("shadercache")}
-                      strTitle={"Clear Shader Cache"}
-                      strOKButtonText={"Clear"}
-                    >
-                      Are you sure you want to clear <strong>ALL</strong> shader cache?
-                    </ConfirmModal>,
-                  )
-                }
-              >
-                Clear All Shader Cache
-              </ButtonItem>
-            </PanelSectionRow>
-          </React.Fragment>
-        )}
+        <React.Fragment>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={selectedGamesWithShaderCache.length === 0}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("shadercache", selectedGamesWithShaderCache)}
+                    strTitle={"Clear Shader Cache"}
+                    strOKButtonText={"Clear"}
+                  >
+                    Are you sure you want to clear the shader cache for <strong>{Array.from(gamesWithShaderCache.filter(({ appid }) => selectedGamesWithShaderCache.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear Selected Shader Cache
+            </ButtonItem>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={totalShaderCacheSize === "0B"}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("shadercache")}
+                    strTitle={"Clear Shader Cache"}
+                    strOKButtonText={"Clear"}
+                  >
+                    Are you sure you want to clear <strong>ALL</strong> shader cache?
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear All Shader Cache
+            </ButtonItem>
+          </PanelSectionRow>
+        </React.Fragment>
       </PanelSection>
       <PanelSection title="Compatibility Data" spinner={gamesWithCompatData?.length === 0 && totalCompatDataSize !== "0B"}>
-        <PanelSectionRow>
+        <PanelSectionRow style={{ fontSize: "11px", marginBottom: "10px" }}>
+          Compatibility data is information stored by your Steam Deck to ensure compatibility with hardware and other software. It's ok to delete because it will be recreated automatically as needed.
+        </PanelSectionRow>
+        <PanelSectionRow style={{ color: "yellow", fontSize: "11px", marginBottom: "10px" }}>
+          Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
+        </PanelSectionRow>
+        <PanelSectionRow style={{ marginBottom: "10px" }}>
           Total Size: { totalCompatDataSize?.length > 0 ? totalCompatDataSize : 'Calculating...'}
         </PanelSectionRow>
         {gamesWithCompatData?.length > 0 && gamesWithCompatData.map(({ appid, name }) => (
             <DialogCheckbox key={appid} label={name} onChange={checked => handleCompatDataCheckboxSelection(checked, appid.toString())} />
         ))}
-        {gamesWithCompatData?.length > 0 && (
-          <React.Fragment>
-            <PanelSectionRow>
-              <ButtonItem
-                layout="below"
-                bottomSeparator="none"
-                disabled={selectedGamesWithCompatData.length === 0}
-                onClick={() => 
-                  showModal(
-                    <ConfirmModal
-                      onCancel={() => {}} 
-                      onOK={async () => await clearDataCache("compatdata", selectedGamesWithCompatData)}
-                      strTitle={"Clear Compatibility Data"}
-                      strOKButtonText={"Clear"}
-                    >
-                      Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
-                    </ConfirmModal>,
-                  )
-                }
-              >
-                Clear Selected Compat Data
-              </ButtonItem>
-            </PanelSectionRow>
-            <PanelSectionRow>
-              <ButtonItem
-                layout="below"
-                bottomSeparator="none"
-                disabled={totalCompatDataSize === "0B"}
-                onClick={() => 
-                  showModal(
-                    <ConfirmModal
-                      onCancel={() => {}} 
-                      onOK={async () => await clearDataCache("compatdata")}
-                      strTitle={"Clear Compatibility Data"}
-                      strOKButtonText={"Clear"}
-                    >
-                      Are you sure you want to clear <strong>ALL</strong> compatibility data?
-                    </ConfirmModal>,
-                  )
-                }
-              >
-                Clear All Compat Data
-              </ButtonItem>
-            </PanelSectionRow>
-          </React.Fragment>
-        )}
+        <React.Fragment>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={selectedGamesWithCompatData.length === 0}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("compatdata", selectedGamesWithCompatData)}
+                    strTitle={"Clear Compatibility Data"}
+                    strOKButtonText={"Clear"}
+                  >
+                    Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear Selected Compat Data
+            </ButtonItem>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={totalCompatDataSize === "0B"}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("compatdata")}
+                    strTitle={"Clear Compatibility Data"}
+                    strOKButtonText={"Clear"}
+                  >
+                    Are you sure you want to clear <strong>ALL</strong> compatibility data?
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear All Compat Data
+            </ButtonItem>
+          </PanelSectionRow>
+        </React.Fragment>
       </PanelSection>
     </React.Fragment>
   );

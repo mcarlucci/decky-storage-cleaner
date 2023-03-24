@@ -4,7 +4,6 @@ import os
 import urllib.request
 import json
 import math
-import decky_plugin
 
 homeDir = os.environ['DECKY_PLUGIN_DIR']
 
@@ -53,4 +52,4 @@ class Plugin:
         return json.dumps(games_found)
 
     async def delete_cache(self, dirName):
-        shutil.rmtree('/home/deck/.steam/steam/steamapps/' + dirName)
+        await shutil.rmtree('/home/deck/.steam/steam/steamapps/' + dirName)
