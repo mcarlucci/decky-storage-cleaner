@@ -1,7 +1,5 @@
 # Storage Cleaner
 
-## Description
-
 A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for tidying up your Steam Deck's storage (and getting rid of that pesky 'Other' storage eating it all up)!
 
 ## Features
