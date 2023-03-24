@@ -25,14 +25,15 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ### Manually
 
-1. Assuming Decky Loader is already installed, click the Gear (settings) icon
-2. Under the Decky tab, scroll down to the 'Other' section
-3. Enter or copy and paste the following url into the input field: https://www.mcarlucci.com/decky-storage-cleaner.zip
-4. Press the Install button above the input field
-5. You will see a confirm modal with '!!!!NO HASH PROVIDED!!!!' in red, press the Install button (this is normal as the plugin is still in beta and not officially approved by the Decky Loader team yet)
-6. Decky will reopen, but Storage Cleaner won’t show up in the list
-7. Restart your Steam Deck
-8. Storage Cleaner should now show up in Decky Loader
+1. Assuming Decky Loader is already installed, click the Quick Access button and navigate to the Plug icon (Decky)
+2. Click the Gear icon (settings)
+3. Under the Decky tab, scroll down to the 'Other' section
+4. Enter or copy and paste the following url into the input field: https://www.mcarlucci.com/decky-storage-cleaner.zip
+5. Press the Install button above the input field
+6. You will see a confirm modal with '!!!!NO HASH PROVIDED!!!!' in red, press the Install button (this is normal as the plugin is still in beta and not officially approved by the Decky Loader team yet)
+7. Decky will reopen, but Storage Cleaner won’t show up in the list
+8. Restart your Steam Deck
+9. Storage Cleaner should now show up in Decky Loader
 
 ## Possible Future Features
 
