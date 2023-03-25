@@ -25,6 +25,8 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ### Manually
 
+> WARNING: This plugin requires root access to your deck to clear temp data. Install at your own risk!
+
 1. Assuming Decky Loader is already installed, click the Quick Access button and navigate to the Plug icon (Decky)
 2. Click the Gear icon (settings)
 3. Under the Decky tab, scroll down to the 'Other' section
