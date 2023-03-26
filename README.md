@@ -14,8 +14,6 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ## Installation
 
-### Decky Loader Store
-
 > Storage Cleaner is currently in Beta testing and is only available in the Testing Plugin Store Channel.
 
 > WARNING: This plugin requires root access to your deck to clear temp data. Install at your own risk!
