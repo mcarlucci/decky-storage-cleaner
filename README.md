@@ -16,26 +16,16 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ### Decky Loader Store
 
-> Storage Cleaner is currently in Beta testing and may not be avaialble in the Decky store yet. If that is the case, try installing manually.
-
-1. Install [Decky Loader](https://deckbrew.xyz/)
-2. Open the Quick Access menu
-3. Open the Plugins Browser
-4. Find Storage Cleaner and press "Install"
-
-### Manually
+> Storage Cleaner is currently in Beta testing and is only available in the Testing Plugin Store Channel.
 
 > WARNING: This plugin requires root access to your deck to clear temp data. Install at your own risk!
 
-1. Assuming Decky Loader is already installed, click the Quick Access button and navigate to the Plug icon (Decky)
-2. Click the Gear icon (settings)
-3. Under the Decky tab, scroll down to the 'Other' section
-4. Enter or copy and paste the following url into the input field: https://www.mcarlucci.com/decky-storage-cleaner.zip
-5. Press the Install button above the input field
-6. You will see a confirm modal with '!!!!NO HASH PROVIDED!!!!' in red, press the Install button (this is normal as the plugin is still in beta and not officially approved by the Decky Loader team yet). The plug-in should take around 10 seconds to install. If the confirm modal goes away pretty quickly, it is likely you entered a typo when typing in the url.  
-7. Decky will reopen, but Storage Cleaner won’t show up in the list
-8. Restart your Steam Deck
-9. Storage Cleaner should now show up in Decky Loader
+1. If you haven't already, install [Decky Loader](https://deckbrew.xyz/) on your Steam Deck.
+2. Press the Quick Access button on your Steam Deck.
+3. Navigate to the Plug icon (Decky) and press the Gear icon (settings).
+4. On the Decky tab and under the "Beta Participation" section, open the "Plugin Store Channel" drop-down menu and select "Testing".
+5. Press the Quick Access button again, and press the Store icon. 
+6. Find Storage Cleaner and press "Install".
 
 ## Possible Future Features
 
