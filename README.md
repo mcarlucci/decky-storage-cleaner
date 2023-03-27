@@ -1,4 +1,4 @@
-# Storage Cleaner
+# Storage Cleaner (Decky Loader Plugin)
 
 A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for tidying up your Steam Deck's storage (and getting rid of that pesky 'Other' storage eating it all up)! Quickly visualize, select and clear shader cache and compatibility data.
 
