@@ -23,11 +23,9 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 > WARNING: This plugin requires root access to your deck to clear temp data. Install at your own risk!
 
 1. If you haven't already, install [Decky Loader](https://deckbrew.xyz/) on your Steam Deck.
-2. Press the Quick Access button on your Steam Deck.
+2. With Decky Loader installed, press the Quick Access button on your Steam Deck.
 3. Navigate to the Plug icon (Decky) and press the Gear icon (settings).
-4. On the Decky tab and under the "Beta Participation" section, open the "Plugin Store Channel" drop-down menu and select "Testing".
-5. Press the Quick Access button again, and press the Store icon. 
-6. Find Storage Cleaner and press "Install".
+4. Find Storage Cleaner and press "Install".
 
 ## Possible Future Features
 
