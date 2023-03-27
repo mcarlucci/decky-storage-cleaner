@@ -18,8 +18,6 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 
 ## Installation
 
-> Storage Cleaner is currently in Beta testing and is only available in the Testing Plugin Store Channel.
-
 > WARNING: This plugin requires root access to your deck to clear temp data. Install at your own risk!
 
 1. If you haven't already, install [Decky Loader](https://deckbrew.xyz/) on your Steam Deck.
