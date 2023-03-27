@@ -12,7 +12,7 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ![](assets/Screenshot-2.png)
 
-Storage Cleaner is completely free-to-use. It is built in maintained in my spare time. With your help I can remain caffeinated and awake - squashing bugs, adding features and creating more useful plugins.
+Storage Cleaner is completely free-to-use. It is built and maintained in my spare time. With your help I can remain caffeinated and awake - squashing bugs, adding features and creating more useful plugins.
 
 <a href="https://www.buymeacoffee.com/mcarlucci" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
