@@ -27,7 +27,7 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 
 ## Possible Future Features
 
-- Support microsd storage...?
+- Support microsd storage (move/clear)...?
 - Clear depotcache...?
 - Identify non-steam games...?
 - Small disk analyser/visualizer...?
