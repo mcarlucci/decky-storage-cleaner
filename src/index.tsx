@@ -167,7 +167,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
                     strTitle={"Clear Compatibility Data"}
                     strOKButtonText={"Clear"}
                   >
-                    Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
+                    <div style={{ color: "yellow", marginBottom: "10px" }}>
+                      Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
+                    </div>
+                    <div>Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?</div>
                   </ConfirmModal>
                 )
               }
@@ -188,7 +191,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
                     strTitle={"Clear Compatibility Data"}
                     strOKButtonText={"Clear"}
                   >
-                    Are you sure you want to clear <strong>ALL</strong> compatibility data?
+                    <div style={{ color: "yellow", marginBottom: "10px" }}>
+                      Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
+                    </div>
+                    <div>Are you sure you want to clear <strong>ALL</strong> compatibility data?</div>
                   </ConfirmModal>
                 )
               }
