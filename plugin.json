@@ -1,10 +1,10 @@
 {
   "name": "Storage Cleaner",
-  "author": "Matt Carlucci <matt@uxdev.io>",
-  "flags": ["debug", "_root"],
+  "author": "Matt Carlucci",
+  "flags": ["debug"],
   "publish": {
     "tags": ["storage", "memory", "shader", "cache", "disk", "utility"],
-    "description": "Tidy up your Deck's storage space",
-    "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
+    "description": "Quickly visualize, select and clear shader cache and compatibility data.",
+    "image": "https://raw.githubusercontent.com/mcarlucci/decky-storage-cleaner/main/assets/Screenshot-1.png"
   }
 }
