@@ -38,9 +38,9 @@ class Plugin:
     async def list_games_with_temp_data(self, dirName):
         # try to fetch GetAppList url, otherwise fallback to static data (poor man's offline mode)
         try:
-            response = urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
+            response = await urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
         except:
-            response = open(homeDir + '/assets/GetAppListV0002.json')
+            response = open(homeDir + '/defaults/GetAppListV0002.json')
         
         all_games = json.loads(response.read())['applist']['apps']
 
