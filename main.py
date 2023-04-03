@@ -5,7 +5,8 @@ import urllib.request
 import json
 import math
 
-homeDir = os.environ['DECKY_PLUGIN_DIR']
+homeDir = os.environ['HOME']
+pluginDir = os.environ['DECKY_PLUGIN_DIR']
 
 class Plugin:
     async def _listdirs(self, rootdir):
@@ -26,7 +27,7 @@ class Plugin:
 
     async def get_size(self, dirName):
         total_size = 0
-        for dirpath, dirnames, filenames in os.walk('/home/deck/.steam/steam/steamapps/' + dirName):
+        for dirpath, dirnames, filenames in os.walk(homeDir + '/.steam/steam/steamapps/' + dirName):
             for f in filenames:
                 fp = os.path.join(dirpath, f)
                 # skip if it is symbolic link
@@ -40,16 +41,16 @@ class Plugin:
         try:
             response = await urllib.request.urlopen('http://api.steampowered.com/ISteamApps/GetAppList/v0002/')
         except:
-            response = open(homeDir + '/defaults/GetAppListV0002.json')
+            response = open(pluginDir + '/GetAppListV0002.json')
         
         all_games = json.loads(response.read())['applist']['apps']
 
         # list games on steam deck
-        local_game_ids = await self._listdirs(self, '/home/deck/.steam/steam/steamapps/' + dirName)
+        local_game_ids = await self._listdirs(self, homeDir + '/.steam/steam/steamapps/' + dirName)
 
         games_found = list(filter(lambda d: str(d['appid']) in local_game_ids, all_games))
 
         return json.dumps(games_found)
 
     async def delete_cache(self, dirName):
-        await shutil.rmtree('/home/deck/.steam/steam/steamapps/' + dirName)
+        await shutil.rmtree(homeDir + '/.steam/steam/steamapps/' + dirName)
