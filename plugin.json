@@ -1,7 +1,7 @@
 {
   "name": "Storage Cleaner",
   "author": "Matt Carlucci",
-  "flags": ["debug"],
+  "flags": [],
   "publish": {
     "tags": ["storage", "cleaner", "shader", "cache", "compatdata", "compatibility", "data", "disk", "utility", "other"],
     "description": "Quickly visualize, select and clear shader cache and compatibility data.",
