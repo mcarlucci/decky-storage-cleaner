@@ -15,6 +15,8 @@ import { FaBoxOpen } from "react-icons/fa";
 interface Game {
   appid: number;
   name: string;
+  size: number;
+  size_readable: string;
 }
 
 const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
@@ -68,14 +70,14 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         console.log(e.message)
       })
 
-    const getTotalShaderCacheSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "shadercache" });
+    const getTotalShaderCacheSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "shadercache", readable: true });
     getTotalShaderCacheSize()
       .then(res => setTotalShaderCacheSize(res.result as string))
       .catch(e => {
         console.log(e.message)
       })
     
-    const getTotalCompatDataSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "compatdata" });
+    const getTotalCompatDataSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "compatdata", readable: true });
     getTotalCompatDataSize()
       .then(res => setTotalCompatDataSize(res.result as string))
       .catch(e => {
@@ -84,7 +86,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   }, [])
 
   return (
-    <React.Fragment>
+    <div id="decky-storage-cleaner">
       <PanelSection title="Shader Cache" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
         <PanelSectionRow style={{ fontSize: "11px", marginBottom: "10px" }}>
           Shader cache is a precompiled collection of shader programs that helps reduce lag in graphics-intensive applications. It's ok to delete because it will be recreated the next time you run the application.
@@ -92,8 +94,8 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         <PanelSectionRow style={{ marginBottom: "10px" }}>
           Total Size: { totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : 'Calculating...' }
         </PanelSectionRow>
-        {gamesWithShaderCache?.length > 0 && gamesWithShaderCache.map(({ appid, name }) => (
-            <DialogCheckbox key={appid} label={name} onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
+        {gamesWithShaderCache?.length > 0 && gamesWithShaderCache.map(({ appid, name, size_readable }) => (
+            <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleShaderCacheCheckboxSelection(checked, appid.toString())}/>
         ))}
         <React.Fragment>
           <PanelSectionRow>
@@ -150,8 +152,8 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         <PanelSectionRow style={{ marginBottom: "10px" }}>
           Total Size: { totalCompatDataSize?.length > 0 ? totalCompatDataSize : 'Calculating...'}
         </PanelSectionRow>
-        {gamesWithCompatData?.length > 0 && gamesWithCompatData.map(({ appid, name }) => (
-            <DialogCheckbox key={appid} label={name} onChange={checked => handleCompatDataCheckboxSelection(checked, appid.toString())} />
+        {gamesWithCompatData?.length > 0 && gamesWithCompatData.map(({ appid, name, size_readable }) => (
+            <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleCompatDataCheckboxSelection(checked, appid.toString())} />
         ))}
         <React.Fragment>
           <PanelSectionRow>
@@ -204,7 +206,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
           </PanelSectionRow>
         </React.Fragment>
       </PanelSection>
-    </React.Fragment>
+    </div>
   );
 };
 
