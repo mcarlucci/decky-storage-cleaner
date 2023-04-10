@@ -4,7 +4,8 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ## Features
 
-- Get disk usage stats for your Steam Deck's shader cache and compatibility data
+- Get disk usage data for your Steam Deck's shader cache and compatibility data
+- Identify Steam and Non-Steam games
 - Selectively clear the shader cache and compatibility data you don't want
 - Clear all the shader cache or compatibility data all at once
 
@@ -27,7 +28,6 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 
 - Support microsd storage (move/clear)...?
 - Clear depotcache...?
-- Identify non-steam games...?
 - Small disk analyser/visualizer...?
 - Auto/scheduled cache cleanups...?
 - Identify games with games saves stored in compatdata...?
