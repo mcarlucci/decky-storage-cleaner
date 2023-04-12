@@ -13,18 +13,18 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 
 ![](assets/Screenshot-2.png)
 
-## Donate
-
-Storage Cleaner is completely free-to-use. It is built and maintained in my spare time. With your help I can remain caffeinated and awake - squashing bugs, adding features and creating more useful plugins.
-
-<a href="https://www.buymeacoffee.com/mcarlucci" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 ## Installation
 
 1. If you haven't already, install [Decky Loader](https://deckbrew.xyz/) on your Steam Deck.
 2. With Decky Loader installed, press the Quick Access button on your Steam Deck.
 3. Navigate to the Plug icon (Decky) and press the Gear icon (settings).
 4. Find Storage Cleaner and press "Install".
+
+## Donate
+
+Storage Cleaner is completely free-to-use. It is built and maintained in my spare time. With your help I can remain caffeinated and awake - squashing bugs, adding features and creating more useful plugins.
+
+<a href="https://www.buymeacoffee.com/mcarlucci" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Possible Future Features
 
