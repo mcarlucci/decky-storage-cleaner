@@ -20,7 +20,7 @@ A [Decky Loader](https://github.com/SteamDeckHomebrew/decky-loader) plugin for t
 3. Navigate to the Plug icon (Decky) and press the Gear icon (settings).
 4. Find Storage Cleaner and press "Install".
 
-## Donate
+## Support My Work
 
 Storage Cleaner is completely free-to-use. It is built and maintained in my spare time. With your help I can remain caffeinated and awake - squashing bugs, adding features and creating more useful plugins.
 
