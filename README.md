@@ -34,3 +34,20 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 - Auto/scheduled cache cleanups...?
 - Identify games with games saves stored in compatdata...?
 - Empty Trash directory...?
+
+## Methodologies
+
+### Getting Shader Cache and Compat Data
+
+- Native Python file methods are used get all of the subdirectories in the `home/deck/.steam/steam/steamapps/shadercache` and `home/deck/.steam/steam/steamapps/compatdata` parent directories
+- Each subdirectory name is a steam appid/gameid
+
+### Getting Steam and Non-Steam App Names
+
+- Because each game directory name is an appid/gameid, it can be used to fetch the game name via the client side Steam `appStore.GetAppOverviewByGameID(game.appid)` method. This method returns an object with a `display_name` property, which is the name of the corresponding steam or non-steam game
+
+### Clearing Shader Cache and Compat Data
+
+- Game specific shader cache is deleted recursively by appid (directory name) using the `shutil.rmtree('home/deck/.steam/steam/steamapps/shadercache/<appId>')` native Python method
+  
+  > Shader Cache will regerenerate either during gameplay or preemptively via OTA (over the air) updates via Steam
