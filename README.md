@@ -46,7 +46,7 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 
 - Because each game directory name is an appid/gameid, it can be used to fetch the game name via the client side Steam `appStore.GetAppOverviewByGameID(game.appid)` method. This method returns an object with a `display_name` property, which is the name of the corresponding steam or non-steam game
 
-- `appStore.GetAppOverviewByGameID(game.appid)` also returns the `app_type` property which can be used to differentiate between Steam and Non-Steam games
+- `appStore.GetAppOverviewByGameID(game.appid)` also returns the `app_type` property, which is used to differentiate between Steam and Non-Steam games
 
 ### Clearing Shader Cache and Compat Data
 
