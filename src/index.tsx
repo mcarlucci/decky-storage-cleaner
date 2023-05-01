@@ -11,12 +11,14 @@ import {
 } from "decky-frontend-lib";
 import React, { VFC, useState, useEffect } from "react";
 import { FaBoxOpen } from "react-icons/fa";
+import { BsCloudSlashFill } from "react-icons/bs"
 
 interface Game {
   appid: number;
   size: number;
   size_readable: string;
   is_steam_game?: boolean;
+  is_not_steam_cloud_supported?: boolean;
   name?: string;
 }
 
@@ -82,6 +84,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         const gameInfo = appStore.GetAppOverviewByGameID(game.appid);
         game.name = gameInfo?.display_name;
         game.is_steam_game = gameInfo?.app_type === 1;
+        game.is_not_steam_cloud_supported = gameInfo?.local_per_client_data?.cloud_status === 1
         return game;
       })
       .filter(({ name, size }) => name && size)
@@ -101,9 +104,14 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
       <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => is_steam_game) ? "block" : "none" }}>
         STEAM
       </PanelSectionRow>
-      {gamesArr?.length > 0 && gamesArr.map(({ appid, name, size_readable, is_steam_game }) => {
+      {gamesArr?.length > 0 && gamesArr.map(({ appid, name, size_readable, is_steam_game, is_not_steam_cloud_supported }) => {
         if (!is_steam_game) return;
-        return <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleCheckboxSelection(checked, appid.toString(), cacheType)}/>
+        return (
+          <React.Fragment>
+            <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleCheckboxSelection(checked, appid.toString(), cacheType)}/>
+            {cacheType === "compat" && is_not_steam_cloud_supported && <div style={{ fontSize: "12px", color: "yellow", margin: "0 0 12px 35px" }}>WARNING: The above game does NOT support Steam Cloud Saves. On-device game save data may be permanently lost!</div>}
+          </React.Fragment>
+        )
       })}
       <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => !is_steam_game) ? "block" : "none" }}>
         NON-STEAM
@@ -175,9 +183,6 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         <PanelSectionRow style={{ fontSize: "12px", marginBottom: "10px" }}>
           Compatibility data is information stored by your Steam Deck to ensure compatibility with hardware and other software. It's ok to delete because it will be recreated automatically as needed.
         </PanelSectionRow>
-        <PanelSectionRow style={{ color: "yellow", fontSize: "12px", marginBottom: "10px" }}>
-          Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
-        </PanelSectionRow>
         <PanelSectionRow style={{ fontSize: "17px", marginBottom: "10px" }}>
           Total Size: {totalCompatDataSize?.length > 0 ? totalCompatDataSize : "Calculating..."}
         </PanelSectionRow>
@@ -197,7 +202,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
                     strOKButtonText={"Clear"}
                   >
                     <div style={{ color: "yellow", marginBottom: "10px" }}>
-                      Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
+                      CAUTION: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves. On-device game save data may be permanently lost.
                     </div>
                     <div>Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?</div>
                   </ConfirmModal>
@@ -221,7 +226,7 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
                     strOKButtonText={"Clear"}
                   >
                     <div style={{ color: "yellow", marginBottom: "10px" }}>
-                      Warning: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves.
+                    CAUTION: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves. On-device game save data may be permanently lost.
                     </div>
                     <div>Are you sure you want to clear <strong>ALL</strong> compatibility data?</div>
                   </ConfirmModal>
