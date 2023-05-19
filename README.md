@@ -53,3 +53,7 @@ Storage Cleaner is completely free-to-use. It is built and maintained in my spar
 - Game specific shader cache is deleted recursively by appid (directory name) using the `shutil.rmtree('home/deck/.steam/steam/steamapps/shadercache/<appId>')` native Python method
   
   > Shader Cache will regerenerate either during gameplay or preemptively via OTA (over the air) updates via Steam
+
+### Detecting Games That Don't Support or Have Never Synced to Steam Cloud Saves
+
+- `appStore.GetAppOverviewByGameID(game.appid)` returns the `local_per_client_data.cloud_status` object/property, which is used to check if an installed game is/has ever synced to Steam Cloud Saves

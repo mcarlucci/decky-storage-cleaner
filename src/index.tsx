@@ -11,7 +11,6 @@ import {
 } from "decky-frontend-lib";
 import React, { VFC, useState, useEffect } from "react";
 import { FaBoxOpen } from "react-icons/fa";
-import { BsCloudSlashFill } from "react-icons/bs"
 
 interface Game {
   appid: number;
@@ -99,26 +98,28 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   }
 
   // Templates
+  const renderCheckbox = (game: Game, cacheType: string) => (
+    <React.Fragment>
+      <DialogCheckbox key={game.appid} label={`${game.name} (${game.size_readable})`} onChange={checked => handleCheckboxSelection(checked, game.appid.toString(), cacheType)}/>
+      {cacheType === "compat" && game.is_not_steam_cloud_supported && <div style={{ fontSize: "12px", color: "red", margin: "0 0 12px 35px" }}>WARNING: This game DOES NOT support or has never synced to Steam Cloud Saves. ON-DEVICE GAME SAVE DATA MAY BE PERMANANTLEY LOST!</div>}
+    </React.Fragment>
+  );
+
   const renderGameLists = (gamesArr: Game[], cacheType: string) => (
     <React.Fragment>
       <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => is_steam_game) ? "block" : "none" }}>
         STEAM
       </PanelSectionRow>
-      {gamesArr?.length > 0 && gamesArr.map(({ appid, name, size_readable, is_steam_game, is_not_steam_cloud_supported }) => {
-        if (!is_steam_game) return;
-        return (
-          <React.Fragment>
-            <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleCheckboxSelection(checked, appid.toString(), cacheType)}/>
-            {cacheType === "compat" && is_not_steam_cloud_supported && <div style={{ fontSize: "12px", color: "yellow", margin: "0 0 12px 35px" }}>WARNING: The above game does NOT support Steam Cloud Saves. On-device game save data may be permanently lost!</div>}
-          </React.Fragment>
-        )
+      {gamesArr?.length > 0 && gamesArr.map(game => {
+        if (!game.is_steam_game) return;
+        return renderCheckbox(game, cacheType)
       })}
       <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => !is_steam_game) ? "block" : "none" }}>
         NON-STEAM
       </PanelSectionRow>
-      {gamesArr?.length > 0 && gamesArr.map(({ appid, name, size_readable, is_steam_game }) => {
-        if (is_steam_game) return;
-        return <DialogCheckbox key={appid} label={`${name} (${size_readable})`} onChange={checked => handleCheckboxSelection(checked, appid.toString(), cacheType)}/>
+      {gamesArr?.length > 0 && gamesArr.map(game => {
+        if (game.is_steam_game) return;
+        return renderCheckbox(game, cacheType)
       })}
     </React.Fragment>
   );
@@ -135,27 +136,6 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         </PanelSectionRow>
         { renderGameLists(gamesWithShaderCache, "shader") }
         <React.Fragment>
-          <PanelSectionRow>
-            <ButtonItem
-              layout="below"
-              bottomSeparator="none"
-              disabled={selectedGamesWithShaderCache.length === 0}
-              onClick={() => 
-                showModal(
-                  <ConfirmModal
-                    onCancel={() => {}} 
-                    onOK={async () => await clearDataCache("shadercache", selectedGamesWithShaderCache)}
-                    strTitle={"Clear Shader Cache"}
-                    strOKButtonText={"Clear"}
-                  >
-                    Are you sure you want to clear the shader cache for <strong>{Array.from(gamesWithShaderCache.filter(({ appid }) => selectedGamesWithShaderCache.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
-                  </ConfirmModal>
-                )
-              }
-            >
-              Clear Selected Shader Cache
-            </ButtonItem>
-          </PanelSectionRow>
           <PanelSectionRow>
             <ButtonItem
               layout="below"
@@ -177,6 +157,27 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
               Clear All Shader Cache
             </ButtonItem>
           </PanelSectionRow>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={selectedGamesWithShaderCache.length === 0}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("shadercache", selectedGamesWithShaderCache)}
+                    strTitle={"Clear Shader Cache"}
+                    strOKButtonText={"Clear"}
+                  >
+                    Are you sure you want to clear the shader cache for <strong>{Array.from(gamesWithShaderCache.filter(({ appid }) => selectedGamesWithShaderCache.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear Selected Shader Cache
+            </ButtonItem>
+          </PanelSectionRow>
         </React.Fragment>
       </PanelSection>
       <PanelSection title="Compatibility Data" spinner={gamesWithCompatData?.length === 0 && totalCompatDataSize !== "0B"}>
@@ -192,30 +193,6 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
             <ButtonItem
               layout="below"
               bottomSeparator="none"
-              disabled={selectedGamesWithCompatData.length === 0}
-              onClick={() => 
-                showModal(
-                  <ConfirmModal
-                    onCancel={() => {}} 
-                    onOK={async () => await clearDataCache("compatdata", selectedGamesWithCompatData)}
-                    strTitle={"Clear Compatibility Data"}
-                    strOKButtonText={"Clear"}
-                  >
-                    <div style={{ color: "yellow", marginBottom: "10px" }}>
-                      CAUTION: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves. On-device game save data may be permanently lost.
-                    </div>
-                    <div>Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?</div>
-                  </ConfirmModal>
-                )
-              }
-            >
-              Clear Selected Compat Data
-            </ButtonItem>
-          </PanelSectionRow>
-          <PanelSectionRow>
-            <ButtonItem
-              layout="below"
-              bottomSeparator="none"
               disabled={totalCompatDataSize === "0B"}
               onClick={() => 
                 showModal(
@@ -225,15 +202,43 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
                     strTitle={"Clear Compatibility Data"}
                     strOKButtonText={"Clear"}
                   >
-                    <div style={{ color: "yellow", marginBottom: "10px" }}>
-                    CAUTION: Game save data can sometimes be stored in compatibility data for games that don't support cloud saves. On-device game save data may be permanently lost.
-                    </div>
+                    {gamesWithCompatData.filter(({ is_not_steam_cloud_supported }) => is_not_steam_cloud_supported).length > 0 && (
+                      <div style={{ color: "red", marginBottom: "10px" }}>
+                        <strong>DANGER: On-device game save data may be permanently lost for {Array.from(gamesWithCompatData.filter(({ appid, is_not_steam_cloud_supported }) => appid.toString() && is_not_steam_cloud_supported).map(({ name }) => ` ${name}`)).toString()}!</strong>
+                      </div>
+                    )}
                     <div>Are you sure you want to clear <strong>ALL</strong> compatibility data?</div>
                   </ConfirmModal>
                 )
               }
             >
               Clear All Compat Data
+            </ButtonItem>
+          </PanelSectionRow>
+          <PanelSectionRow>
+            <ButtonItem
+              layout="below"
+              bottomSeparator="none"
+              disabled={selectedGamesWithCompatData.length === 0}
+              onClick={() => 
+                showModal(
+                  <ConfirmModal
+                    onCancel={() => {}} 
+                    onOK={async () => await clearDataCache("compatdata", selectedGamesWithCompatData)}
+                    strTitle={"Clear Compatibility Data"}
+                    strOKButtonText={"Clear"}
+                  >
+                    {gamesWithCompatData.filter(({ appid, is_not_steam_cloud_supported }) => selectedGamesWithCompatData.includes(appid.toString()) && is_not_steam_cloud_supported).length > 0 && (
+                      <div style={{ color: "red", marginBottom: "10px" }}>
+                        <strong>DANGER: On-device game save data may be permanently lost for {Array.from(gamesWithCompatData.filter(({ appid, is_not_steam_cloud_supported }) => selectedGamesWithCompatData.includes(appid.toString()) && is_not_steam_cloud_supported).map(({ name }) => ` ${name}`)).toString()}!</strong>
+                      </div>
+                    )}
+                    <div>Are you sure you want to clear the compatibility data for <strong>{Array.from(gamesWithCompatData.filter(({ appid }) => selectedGamesWithCompatData.includes(appid.toString())).map(({ name }) => ` ${name}`)).toString()}</strong>?</div>
+                  </ConfirmModal>
+                )
+              }
+            >
+              Clear Selected Compat Data
             </ButtonItem>
           </PanelSectionRow>
         </React.Fragment>
