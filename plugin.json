@@ -1,6 +1,7 @@
 {
   "name": "Storage Cleaner",
   "author": "Matt Carlucci",
+  "api_version": 1,
   "flags": [],
   "publish": {
     "tags": ["storage", "cleaner", "shader", "cache", "compatdata", "compatibility", "data", "disk", "utility", "other"],

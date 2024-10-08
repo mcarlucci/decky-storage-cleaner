@@ -1,19 +1,20 @@
+import { call } from "@decky/api";
 import {
   ButtonItem,
   definePlugin,
   PanelSection,
   PanelSectionRow,
-  ServerAPI,
   staticClasses,
   DialogCheckbox,
   showModal,
   ConfirmModal
-} from "decky-frontend-lib";
-import React, { VFC, useState, useEffect } from "react";
+} from "@decky/ui";
+import React, { FC, useState, useEffect } from "react";
 import { FaBoxOpen } from "react-icons/fa";
+import { getAppDetails } from "./utils";
 
 interface Game {
-  appid: number;
+  appid: string;
   size: number;
   size_readable: string;
   is_steam_game?: boolean;
@@ -21,7 +22,7 @@ interface Game {
   name?: string;
 }
 
-const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
+const Content: FC = () => {
   const [gamesWithShaderCache, setGamesWithShaderCache] = useState<Game[]>([]);
   const [gamesWithCompatData, setGamesWithCompatData] = useState<Game[]>([]);
   const [totalShaderCacheSize, setTotalShaderCacheSize] = useState<string>("");
@@ -31,24 +32,24 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
 
   // Initialize data
   useEffect(() => {
-    const getGamesWithShaderCache = async () => await serverAPI.callPluginMethod("list_games_with_temp_data", { dirName: "shadercache" });
+    const getGamesWithShaderCache = async () => await call<[string], any>("list_games_with_temp_data", "shadercache");
     getGamesWithShaderCache()
-      .then(async res => setGamesWithShaderCache(await enrichGameList(JSON.parse(`${res.result as Game[]}`))))
+      .then(async res => setGamesWithShaderCache(await enrichGameList(JSON.parse(`${res as Game[]}`))))
       .catch(e => console.log(e.message))
 
-    const getGamesWithCompatData = async () => await serverAPI.callPluginMethod("list_games_with_temp_data", { dirName: "compatdata" });
+    const getGamesWithCompatData = async () => await call<[string], any>("list_games_with_temp_data", "compatdata");
     getGamesWithCompatData()
-      .then(async res => setGamesWithCompatData(await enrichGameList(JSON.parse(`${res.result as Game[]}`))))
+      .then(async res => setGamesWithCompatData(await enrichGameList(JSON.parse(`${res as Game[]}`))))
       .catch(e => console.log(e.message))
 
-    const getTotalShaderCacheSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "shadercache", readable: true });
+    const getTotalShaderCacheSize = async () => await call<[string, boolean], any>("get_size", "shadercache", true);
     getTotalShaderCacheSize()
-      .then(res => setTotalShaderCacheSize(res.result as string))
+      .then(res => setTotalShaderCacheSize(res as string))
       .catch(e => console.log(e.message))
     
-    const getTotalCompatDataSize = async () => await serverAPI.callPluginMethod("get_size", { dirName: "compatdata", readable: true });
+    const getTotalCompatDataSize = async () => await call<[string, boolean], any>("get_size", "compatdata", true);
     getTotalCompatDataSize()
-      .then(res => setTotalCompatDataSize(res.result as string))
+      .then(res => setTotalCompatDataSize(res as string))
       .catch(e => console.log(e.message))
   }, [])
 
@@ -77,13 +78,14 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
 
   async function enrichGameList(gamesArr: Game[]): Promise<Game[]> {
     if (!gamesArr || gamesArr.length === 0) return [];
+    const gameDetailsArr = await Promise.all(gamesArr.map(game => getAppDetails(parseInt(game.appid))));
+
     return gamesArr
-      .map((game: Game) => {
-        // @ts-ignore
-        const gameInfo = appStore.GetAppOverviewByGameID(game.appid);
-        game.name = gameInfo?.display_name;
-        game.is_steam_game = gameInfo?.app_type === 1;
-        game.is_not_steam_cloud_supported = gameInfo?.local_per_client_data?.cloud_status === 1
+      .map((game) => {
+        const gameInfo = gameDetailsArr.find(gameDetails => gameDetails?.unAppID === parseInt(game.appid));
+        game.name = gameInfo?.strDisplayName;
+        game.is_steam_game = gameInfo?.iInstallFolder !== -1;
+        game.is_not_steam_cloud_supported = gameInfo?.eCloudStatus === 1
         return game;
       })
       .filter(({ name, size }) => name && size)
@@ -91,31 +93,37 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   
   async function clearDataCache(cacheDirName: string, appidArr?: string[]): Promise<void> {
     if (appidArr && appidArr.length > 0) {
-      await appidArr.forEach(async appid => await serverAPI.callPluginMethod("delete_cache", { dirName: `${cacheDirName}/${appid}` }));
+      appidArr.forEach(async appid => await call<[string], any>("delete_cache", `${cacheDirName}/${appid}`));
     } else {
-      await serverAPI.callPluginMethod("delete_cache", { dirName: cacheDirName })
+      await call<[string], any>("delete_cache", cacheDirName);
     }
   }
 
   // Templates
-  const renderCheckbox = (game: Game, cacheType: string) => (
-    <React.Fragment>
-      <DialogCheckbox key={game.appid} label={`${game.name} (${game.size_readable})`} onChange={checked => handleCheckboxSelection(checked, game.appid.toString(), cacheType)}/>
-      {cacheType === "compat" && game.is_not_steam_cloud_supported && <div style={{ fontSize: "12px", color: "red", margin: "0 0 12px 35px" }}>WARNING: This game DOES NOT support or has never synced to Steam Cloud Saves. ON-DEVICE GAME SAVE DATA MAY BE PERMANANTLEY LOST!</div>}
-    </React.Fragment>
-  );
+  const renderCheckbox = (game: Game, cacheType: string) => {
+    return (
+      <React.Fragment>
+        <DialogCheckbox key={game.appid} label={`${game.name} (${game.size_readable})`} onChange={checked => handleCheckboxSelection(checked, game.appid.toString(), cacheType)}/>
+        {cacheType === "compat" && game.is_not_steam_cloud_supported && <div style={{ fontSize: "12px", color: "red", margin: "0 0 12px 35px" }}>WARNING: This game DOES NOT support or has never synced to Steam Cloud Saves. ON-DEVICE GAME SAVE DATA MAY BE PERMANANTLEY LOST!</div>}
+      </React.Fragment>
+    );
+  };
 
   const renderGameLists = (gamesArr: Game[], cacheType: string) => (
     <React.Fragment>
-      <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => is_steam_game) ? "block" : "none" }}>
-        STEAM
+      <PanelSectionRow>
+        <div style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => is_steam_game) ? "block" : "none" }}>
+          STEAM
+        </div>
       </PanelSectionRow>
       {gamesArr?.length > 0 && gamesArr.map(game => {
         if (!game.is_steam_game) return;
         return renderCheckbox(game, cacheType)
       })}
-      <PanelSectionRow style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => !is_steam_game) ? "block" : "none" }}>
-        NON-STEAM
+      <PanelSectionRow>
+        <div style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "10px", display: gamesArr.some(({ is_steam_game }) => !is_steam_game) ? "block" : "none" }}>
+          NON-STEAM
+        </div>
       </PanelSectionRow>
       {gamesArr?.length > 0 && gamesArr.map(game => {
         if (game.is_steam_game) return;
@@ -128,11 +136,15 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   return (
     <div id="decky-storage-cleaner">
       <PanelSection title="Shader Cache" spinner={gamesWithShaderCache?.length === 0 && totalShaderCacheSize !== "0B"}>
-        <PanelSectionRow style={{ fontSize: "12px", marginBottom: "10px" }}>
-          Shader cache is a precompiled collection of shader programs that helps reduce lag in graphics-intensive applications. It's ok to delete because it will be recreated the next time you run the application.
+        <PanelSectionRow>
+          <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+            Shader cache is a precompiled collection of shader programs that helps reduce lag in graphics-intensive applications. It's ok to delete because it will be recreated the next time you run the application.
+          </div>
         </PanelSectionRow>
-        <PanelSectionRow style={{ fontSize: "17px", marginBottom: "10px" }}>
-          Total Size: {totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : "Calculating..."}
+        <PanelSectionRow>
+          <div style={{ fontSize: "17px", marginBottom: "10px" }}>
+            Total Size: {totalShaderCacheSize?.length > 0 ? totalShaderCacheSize : "Calculating..."}
+          </div>
         </PanelSectionRow>
         { renderGameLists(gamesWithShaderCache, "shader") }
         <React.Fragment>
@@ -181,11 +193,15 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
         </React.Fragment>
       </PanelSection>
       <PanelSection title="Compatibility Data" spinner={gamesWithCompatData?.length === 0 && totalCompatDataSize !== "0B"}>
-        <PanelSectionRow style={{ fontSize: "12px", marginBottom: "10px" }}>
-          Compatibility data is information stored by your Steam Deck to ensure compatibility with hardware and other software. It's ok to delete because it will be recreated automatically as needed.
+        <PanelSectionRow>
+          <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+            Compatibility data is information stored by your Steam Deck to ensure compatibility with hardware and other software. It's ok to delete because it will be recreated automatically as needed.
+          </div>
         </PanelSectionRow>
-        <PanelSectionRow style={{ fontSize: "17px", marginBottom: "10px" }}>
-          Total Size: {totalCompatDataSize?.length > 0 ? totalCompatDataSize : "Calculating..."}
+        <PanelSectionRow>
+          <div style={{ fontSize: "17px", marginBottom: "10px" }}>
+            Total Size: {totalCompatDataSize?.length > 0 ? totalCompatDataSize : "Calculating..."}
+          </div>
         </PanelSectionRow>
         { renderGameLists(gamesWithCompatData, "compat") }
         <React.Fragment>
@@ -247,10 +263,10 @@ const Content: VFC<{ serverAPI: ServerAPI }> = ({ serverAPI }) => {
   );
 };
 
-export default definePlugin((serverApi: ServerAPI) => {
+export default definePlugin(() => {
   return {
     title: <div className={staticClasses.Title}>Storage Cleaner</div>,
-    content: <Content serverAPI={serverApi} />,
+    content: <Content />,
     icon: <FaBoxOpen />,
   };
 });
